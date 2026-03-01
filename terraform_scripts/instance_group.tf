@@ -7,7 +7,7 @@ resource "google_compute_region_instance_group_manager" "web" {
 
   depends_on = [
     google_compute_instance_template.web,
-    google_compute_health_check.web
+    google_compute_region_health_check.web
   ]
   
 # Reference the instance template
@@ -41,7 +41,7 @@ instance_template=google_compute_instance_template.web.self_link_unique
 
   # Auto-healing policy
   auto_healing_policies {
-    health_check      = google_compute_health_check.web.id
+    health_check      = google_compute_region_health_check.web.id
     initial_delay_sec = 300  # Give instances 5 minutes to start before checking health
   }
 

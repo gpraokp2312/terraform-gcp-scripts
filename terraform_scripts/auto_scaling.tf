@@ -8,7 +8,7 @@ resource "google_compute_region_autoscaler" "web" {
   google_compute_region_instance_group_manager.web
 ]
   autoscaling_policy {
-    min_replicas    = 2
+    min_replicas    = 1
     max_replicas    = 2
     cooldown_period = 120  # Seconds to wait before collecting metrics from new instances
 
