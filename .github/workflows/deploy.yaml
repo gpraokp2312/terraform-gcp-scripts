@@ -54,10 +54,10 @@ jobs:
 
       - name: Terraform Plan
         id: plan_manual
-        run: |
-        cd ./terraform 
-        terraform plan -input=false -out=tfplan
-        # On pull requests, the plan is generated but not applied.
+        run: |-
+          cd ./terraform_scripts 
+          terraform plan -input=false -out=tfplan
+          # On pull requests, the plan is generated but not applied.
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
