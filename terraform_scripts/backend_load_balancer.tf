@@ -15,7 +15,7 @@ resource "google_compute_region_backend_service" "web" {
 
 backend {
     group           = google_compute_region_instance_group_manager.web.instance_group
-    balancing_mode = "UTILIZATION"
+    balancing_mode = "CONNECTION"
 
   }
 
