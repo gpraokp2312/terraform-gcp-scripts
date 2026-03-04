@@ -1,4 +1,4 @@
-# Backend service using the managed instance group
+# Backend service using the managed instance groups
 resource "google_compute_region_backend_service" "web" {
   name                  = "gps-backend-web"
   protocol              = "HTTP"
