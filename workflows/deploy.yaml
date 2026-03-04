@@ -1,0 +1,62 @@
+name: Terraform GCP Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+
+permissions:
+  contents: read
+  id-token: write # Required for Workload Identity Federation
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }} 
+  AR_REPO_NAME: test-registry # e.g. 'clouddemo'
+  AR_LOCATION: asia-south1 # e.g. 'us-central1'
+  GKE_CLUSTER: cluster-1 # e.g. 'clouddemo-linux'
+  GKE_ZONE: asia-south1 # e.g. 'us-central1-a'
+  IMAGE_NAME: python-app
+  # Service account email created for GitHub Actions
+  SERVICE_ACCOUNT_EMAIL: gke-github-sa@kube-demo-488400.iam.gserviceaccount.com
+  # Workload Identity Provider name stored as a GitHub secret
+  IMAGE_TAG: ${{ github.sha }}
+  DEPLOYMENT_NAME: python-app-deployment
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    environment: production # Use GitHub environments for extra protection/approval
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Google Auth
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service_account: ${{ env.SERVICE_ACCOUNT_EMAIL }}
+          credentials_json: ${{ secrets.GKE_SA_KEY }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.x.x
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -out=tfplan
+        # On pull requests, the plan is generated but not applied.
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: terraform apply -auto-approve -input=false tfplan
+        # The apply step runs automatically only when changes are merged into the main branch.
