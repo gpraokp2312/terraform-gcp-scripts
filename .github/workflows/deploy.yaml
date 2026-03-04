@@ -1,4 +1,4 @@
-name: Terraform GCP Deployment
+name: Terraform GCP Deployment for test
 
 on:
   push:
