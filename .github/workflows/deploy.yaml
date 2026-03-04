@@ -53,6 +53,7 @@ jobs:
         run: terraform init
 
       - name: Terraform Plan
+        working-directory: ../terraform_scripts
         run: terraform plan -input=false -out=tfplan
         # On pull requests, the plan is generated but not applied.
 
