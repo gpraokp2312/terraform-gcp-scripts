@@ -6,7 +6,7 @@ resource "google_compute_region_backend_service" "web" {
   timeout_sec           = 30
   health_checks         = [google_compute_region_health_check.web.id]
   region 		= "asia-south1"
-  load_balancing_scheme = "EXTERNAL"
+  load_balancing_scheme = "EXTERNAL_MANAGED"
 
   depends_on = [
     google_compute_region_instance_group_manager.web,
