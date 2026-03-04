@@ -60,6 +60,9 @@ jobs:
           # On pull requests, the plan is generated but not applied.
 
       - name: Terraform Apply
+        id: apply_manual
+        run: |-
+          cd ./terraform_scripts
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false tfplan
         # The apply step runs automatically only when changes are merged into the main branch.
